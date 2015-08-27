@@ -1,0 +1,166 @@
+<html>
+<head>
+{% load staticfiles %}
+<meta charset="utf-8"></meta>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<script  type="text/javascript" src="{% static "js/jquery.qrcode.min.js" %}"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>
+</title>
+</head>
+<script language="javascript"> 
+function checkvalid(){
+    console.log($("#name").val());
+    if($("#name").val() == "") {alert("自由职业者姓名不能为空");return false;} 
+    if($("#projectname").val() == "") {alert("项目名称不能为空");return false;} 
+    return true;
+}
+function getpage(data){
+    $.get(data,{},function(data,status){
+        if(data!="empty"){
+            $("#eva_info").html(data);       
+    }        
+    });
+
+}
+function del_eva(id,page,name){
+  var res =confirm("删除「"+name+"」的评价?");
+  if(res==false) return;
+  url = "/evaluation/freelancer/delete?id="+id+"&page="+page;
+  $.get(url,{},function(data,status){
+          if(status=="success"){
+                $("#eva_info").html(data);
+              }
+          else{
+             alert("删除失败,请重新删除");
+             }
+        });
+
+}
+function getqrcode(id){
+    console.log(document.charset);
+    $("#qrcodeimg").html("");
+    url ="http://"+location.host+"/weixin/freelancer?id="+id;
+    jQuery("#qrcodeimg").qrcode({
+        render: "table", //table方式
+        width: 200, //宽度
+        height: 200, //高度
+        text: url, //任意内容
+        });
+    $("#showqrcode").modal("show");
+}
+</script>
+<body>
+
+<ul class="nav nav-tabs">
+<li role="presentation" ><a href="/evaluation/client">客户</a></li>
+<li role="presentation" class="active"><a href="#">自由职业者</a></li>
+</ul>
+
+<div style="position:relative;top:10px">
+    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target= "#addFreelancerEvaluation">   <!-- data-toggle 用于切换模态框   --> 
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增评价
+</button>
+</div>
+<div class="modal fade" id="showqrcode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">二维码</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="qrcodeimg" style="padding:0% 30%" class="modal-body">
+                        </div>   
+                </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addFreelancerEvaluation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">评价</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/evaluation/freelancer/add" onsubmit="return checkvalid();">
+                        {%csrf_token%}
+                        <div class="form-group">
+                            <label for="name">自由职业者</label>
+                            <input type="text" class="form-control" id="name" name="name" value="" placeholder="自由职业者姓名">
+                        </div>
+                        <div class="form-group">
+                            <label for="projectname">项目</label>
+                            <input type="text" class="form-control" id="projectname" name="projectname" placeholder="项目名称">
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+<div style="position:relative;top:10px" class="bs-example" id="eva_info" data-example-id="striped-table">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>自由职业者</th>
+                <th>项目</th>
+                <th>需求</th>
+                <th>管理</th>
+                <th>沟通</th>
+                <th>评价</th>
+                <th>操作</th>
+                
+            </tr>
+        </thead>
+        <tbody >
+        {% for sub_eva in sub_evas %}
+           <tr>
+               <td>{{sub_eva.name}}</td>
+               <td>{{sub_eva.projectname}}</td>
+               <td>{{sub_eva.eva_requirement}}</td>
+               <td>{{sub_eva.eva_management}}</td>
+               <td>{{sub_eva.eva_communication}}</td>
+               <td  title="{{sub_eva.eva_content}}">{{sub_eva.eva_content|slice:":10"}}</td>
+               <td>
+                   <button type="button" class="btn btn-default btn-xs" onclick=getqrcode({{sub_eva.id}})>
+                       <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> 二维码
+                   </button>
+                   <button type="button" class="btn btn-default btn-xs" onclick=del_eva({{sub_eva.id}},{{page}},"{{sub_eva.name}}")>
+                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> delete
+                   </button>
+                </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+            {% if page > 1 %}
+            <button type="button"   style="position:absolute;left:20px" class="btn btn-default btn-sm" onclick=getpage("/evaluation/freeelancer?page={{page|add:-1}}")>
+                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> 上一页
+            </button>
+            {% endif %}
+
+            {% if page < max_page %}
+            <button type="button" style="position:absolute;right:20px"  class="btn btn-default btn-sm" onclick=getpage("/evaluation/freelancer?page={{page|add:1}}")>
+                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> 下一页
+            </button>
+            {% endif %}
+</div>
+
+</body>
+</html>
+

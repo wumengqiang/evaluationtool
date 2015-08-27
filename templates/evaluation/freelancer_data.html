@@ -1,0 +1,46 @@
+ <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>自由职业者</th>
+                <th>项目</th>
+                <th>需求</th>
+                <th>管理</th>
+                <th>沟通</th>
+                <th>评价</th>
+                <th>操作</th>
+                
+            </tr>
+        </thead>
+        <tbody >
+        {% for sub_eva in sub_evas %}
+           <tr>
+               <td>{{sub_eva.name}}</td>
+               <td>{{sub_eva.projectname}}</td>
+               <td>{{sub_eva.eva_requirement}}</td>
+               <td>{{sub_eva.eva_management}}</td>
+               <td>{{sub_eva.eva_communication}}</td>
+               <td title="{{sub_eva.eva_content}}">{{sub_eva.eva_content|slice:":10"}}</td>
+               <td>
+                   <button type="button" class="btn btn-default btn-xs" onclick=getqrcode({{sub_eva.id}})>
+                       <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> 二维码
+                   </button>
+                   <button type="button" class="btn btn-default btn-xs" onclick=del_eva({{sub_eva.id}},{{page}},"{{sub_eva.name}}")>
+                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> delete
+                   </button>
+          </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+            {% if page > 1 %}
+            <button type="button" style="position:absolute;left:20px" class="btn btn-default btn-sm" onclick=getpage("/evaluation/freelancer?page={{page|add:-1}}")>
+                <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> 上一页
+            </button>
+            {% endif %}
+
+            {% if page < max_page %}
+            <button type="button" style="position:absolute;right:20px"class="btn btn-default btn-sm" onclick=getpage("/evaluation/freelancer?page={{page|add:1}}")>
+                <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> 下一页
+            </button>
+            {% endif %}
+
+
