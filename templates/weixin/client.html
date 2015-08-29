@@ -60,10 +60,11 @@ function posteva(){
             if(data == "ok"){
                $("#popup").html("  非常感谢您的宝贵意见  ~ ^_^ ~");
                $("#popup").show();
-               $("#submitBtn").css("background",'#B6B6B4');
+               $("#submitBtn").css("background",'#9d9d9d');
                $("#submitBtn").html("已评价");
                $("#submitBtn").attr("disabled",true);
                $("#eva_content").attr("disabled",true);
+               $("#eva_content").css("color",'#333');
                $("[href='#']").removeAttr("onclick");
             }
             else if(data=="fail"){
@@ -79,11 +80,12 @@ $(document).ready(function() {
     clickstar("qua",{{eva_quality}});
     clickstar("ser",{{eva_service}});
     $("#eva_content").html("{{eva_content}}");
-    $("#submitBtn").css("background",'#B6B6B4');
+    $("#submitBtn").css("background",'#9d9d9d');
     $("#submitBtn").html("已评价");
     $("#eva_content").attr("disabled",true);
     $("#submitBtn").attr("disabled",true);
     $("[href='#']").removeAttr("onclick");
+    $("#eva_content").css("color",'#333');
     var data={
         title :"{{projectname}}",
         link  : 'http://' + window.location.hostname +"/weixin/client?name={{name}}&projectname={{projectname}}",
@@ -110,7 +112,7 @@ $(document).ready(function() {
 <body id="body">
 <div id="exbutton"  onclick=hidepopupdialog()>
 <div style="margin:5% 5%;border:none">
-        厘米脚印邀请您对我们在「{{projectname}}」项目中的表现进行评价。
+        厘米脚印邀请您对我们在「{{projectname}}」项目中的表现进行评价
 </div>
 <div>
     <form method="post" action="/weixin/client/add"  style="margin:0% 5%">
@@ -187,14 +189,14 @@ $(document).ready(function() {
                 </a>
                 <font color="#41A317" style="position:relative;top:3px"id="ser-6"> </font>
         </div>
-        <div class="form-group">
-             <textarea rows="4" cols="20" class="form-control" id="eva_content" name="eva_content" placeholder="您的评价很重要!来点评一下吧..." required></textarea>
+        <div class="form-group" style="margin-top:6%">
+             <textarea rows="4" cols="20" class="form-control" style="box-shadow:none"  id="eva_content" name="eva_content" placeholder="您的评价很重要！来点评一下吧..." required></textarea>
         </div>
     </form>
 </div>
 </div>
-<button type="button" onclick=posteva()  style="background:#41A317;border-radius:0px;color:white;width:100%;position:fixed;bottom:0px" id="submitBtn"  class="btn btn-default btn-lg">提交评价</button>
-<div id="popup" style="color:white;position:absolute;top:30%;display:none;left:20%;padding:5% 5%; background:#666666;filter: Alpha(opacity=60);opacity:0.6;">
+<button type="button" onclick=posteva()  style="background:#4da424;border:none;border-radius:0px;color:white;height:40px;width:100%;position:fixed;bottom:0px" id="submitBtn"  >提交评价</button>
+<div id="popup" style="color:white;position:absolute;top:30%;display:none;left:20%;padding:5% 5%; background:#666666;filter: Alpha(opacity=65);opacity:0.65;">
      非常感谢您的宝贵意见 ~ ^_^ ~
 </div>
 </body>
