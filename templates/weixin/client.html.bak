@@ -23,13 +23,11 @@ font-family: 微软雅黑,宋体;
 body{
 font-family: 微软雅黑,宋体; 
 }
-#postok{
-top:40%
-}
 </style>
 </head>
 <script language="javascript"> 
 function clickstar(type,index){
+    $("[data-toggle='tooltip']").tooltip('destroy');
     var id_pre = "#"+type+'-';
     for(var i=1;i<=index;i++){
        var id = id_pre+i;
@@ -40,35 +38,30 @@ function clickstar(type,index){
        $(id).html("<img src=\"{% static "images/img-full-star-grey.png" %}\" width=7%  border=\"none\">");
     }
     
-    tipid = id_pre+6;
-    tipindex = id_pre+index;
-    $(tipid).html("&nbsp&nbsp&nbsp"+$(tipindex).attr('title'));
+    tipid = id_pre+index;
+    $(tipid).tooltip('show');
     id = "#"+type;
     $(id).val(index.toString());
 }
-function hidepopupdialog(){
-    $("#popup").hide();
-}
 function posteva(){
-    setTimeout("hidepopupdialog()",1000);
+    $("[data-toggle='tooltip']").tooltip('destroy');
     if($("#eva_content").val() ==""){
-        $("#popup").html(" 亲，必须要填写评论哦 ~ ^_^ ~");
-        $("#popup").show();
+        $("#modalcontent").html(" <span style=\"padding:0% 20%\">亲，必须要填写评论哦 ^_^</span>");
+        $("#postok").modal("show"); 
         return ;
     }
     $.post('/weixin/client/add', {csrfmiddlewaretoken:$("[name=csrfmiddlewaretoken]").val(), name: $("#name").val(), projectname: $("#projectname").val(), eva_progress: $('#pro').val(),eva_quality: $('#qua').val(),eva_service: $("#ser").val(), eva_content: $("#eva_content").val()}, function (data) { 
             if(data == "ok"){
-               $("#popup").html("  非常感谢您的宝贵意见  ~ ^_^ ~");
-               $("#popup").show();
-               $("#submitBtn").css("background",'#B6B6B4');
+               $("#modalcontent").html(" <span style=\"padding:0% 20%\"> 非常感谢您的宝贵意见 ^_^</span>");
+               $("#postok").modal("show"); 
                $("#submitBtn").html("已评价");
                $("#submitBtn").attr("disabled",true);
                $("#eva_content").attr("disabled",true);
                $("[href='#']").removeAttr("onclick");
             }
             else if(data=="fail"){
-               $("#popup").html(" -_- 出错了,请重新提交");
-               $("#popup").show();
+               $("#modalcontent").html(" <span style=\"padding:0% 20%\">-_- 出错了,请重新提交 </span>");
+               $("#postok").modal("show"); 
             } 
             });
 }    
@@ -78,27 +71,23 @@ $(document).ready(function() {
     clickstar("qua",{{eva_quality}});
     clickstar("ser",{{eva_service}});
     $("#eva_content").html("{{eva_content}}");
-    $("#submitBtn").css("background",'#B6B6B4');
     $("#submitBtn").html("已评价");
     $("#eva_content").attr("disabled",true);
     $("#submitBtn").attr("disabled",true);
     $("[href='#']").removeAttr("onclick");
+    $("[data-toggle='tooltip']").tooltip('destroy');
 });
-{% else %}
 
-$(document).ready(function() {
-    var height = $(window).height() - $("#submitBtn").height();
-    $("#exbutton").height(height);
-});
 {%endif%}
 </script>
-<body id="body">
-<div id="exbutton"  onclick=hidepopupdialog()>
-<div style="margin:5% 5%;border:none">
+<body>
+<div style="margin:5% 10%" class="panel panel-default">
+    <div class="panel-body">
         厘米脚印邀请您对我们在「{{projectname}}」项目中的表现进行评价
+    </div>
 </div>
 <div>
-    <form method="post" action="/weixin/client/add"  style="margin:0% 5%">
+    <form method="post" action="/weixin/client/add"  style="margin:0% 10%">
         {% csrf_token %}
         <div class="form-group">
             <input type="hidden" class="form-control" id="name" name="name" value="{{name}}">
@@ -116,70 +105,72 @@ $(document).ready(function() {
             <input type="hidden" class="form-control" id="ser" name="eva_service" value="3">
         </div>
         <div class="form-group">
-                <span style="position:relative;top:3px">进度&nbsp&nbsp</span>
-                <a href="#" id="pro-1" onclick=clickstar("pro",1)   title="超级混乱" >
+                <span style="margin:1% 0% 0% 0%">进度&nbsp&nbsp</span>
+                <a href="#" id="pro-1" onclick=clickstar("pro",1)  data-toggle="tooltip" data-placement="top" title="超级混乱" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="pro-2" onclick=clickstar("pro",2)   title="项目菜鸟" >
+                <a href="#" id="pro-2" onclick=clickstar("pro",2)  data-toggle="tooltip" data-placement="top" title="项目菜鸟" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="pro-3" onclick=clickstar("pro",3)   title="普通" >
+                <a href="#" id="pro-3" onclick=clickstar("pro",3)  data-toggle="tooltip" data-placement="top" title="普通" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="pro-4" onclick=clickstar("pro",4)   title="高级经理" >
+                <a href="#" id="pro-4" onclick=clickstar("pro",4)  data-toggle="tooltip" data-placement="top" title="高级经理" style="width:50%">
                     <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
                 </a>
-                <a href="#" id="pro-5" onclick=clickstar("pro",5)   title="掌控者" >
+                <a href="#" id="pro-5" onclick=clickstar("pro",5)  data-toggle="tooltip" data-placement="top" title="掌控者" style="width:50%">
                     <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
                 </a>
-                <font color="#41A317" style="position:relative;top:3px" id="pro-6">&nbsp&nbsp&nbsp普通 </font>
         </div>
         <div class="form-group">
-                <span style="position:relative;top:3px">质量&nbsp&nbsp</span>
-                <a href="#" id="qua-1" onclick=clickstar("qua",1)  title="垃圾" >
+                <span style="top:2px">质量&nbsp&nbsp</span>
+                <a href="#" id="qua-1" onclick=clickstar("qua",1) data-toggle="tooltip" data-placement="top" title="垃圾" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="qua-2" onclick=clickstar("qua",2)  title="不太满意" >
+                <a href="#" id="qua-2" onclick=clickstar("qua",2) data-toggle="tooltip" data-placement="top" title="不太满意" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="qua-3" onclick=clickstar("qua",3)  title="还行" >
+                <a href="#" id="qua-3" onclick=clickstar("qua",3) data-toggle="tooltip" data-placement="top" title="还行" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="qua-4" onclick=clickstar("qua",4)  title="质量上乘" >
+                <a href="#" id="qua-4" onclick=clickstar("qua",4) data-toggle="tooltip" data-placement="top" title="质量上乘" style="width:50%">
                     <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
                 </a>
-                <a href="#" id="qua-5" onclick=clickstar("qua",5)  title="极品" >
+                <a href="#" id="qua-5" onclick=clickstar("qua",5) data-toggle="tooltip" data-placement="top" title="极品" style="width:50%">
                     <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
                 </a>
-                <font color="#41A317" style="position:relative;top:3px" id="qua-6">&nbsp&nbsp&nbsp还行 </font>
         </div>
         <div class="form-group">
-                <span style="position:relative;top:3px">服务&nbsp&nbsp</span>
-                <a href="#" id="ser-1" onclick=clickstar("ser",1)  title="态度恶劣" >
+                <span style="top:2px">服务&nbsp&nbsp</span>
+                <a href="#" id="ser-1" onclick=clickstar("ser",1) data-toggle="tooltip" data-placement="top" title="态度恶劣" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="ser-2" onclick=clickstar("ser",2)  title="反应迟缓" >
+                <a href="#" id="ser-2" onclick=clickstar("ser",2) data-toggle="tooltip" data-placement="top" title="反应迟缓" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="ser-3" onclick=clickstar("ser",3)  title="意料之中" >
+                <a href="#" id="ser-3" onclick=clickstar("ser",3) data-toggle="tooltip" data-placement="top" title="意料之中" style="width:50%">
                     <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
                 </a>
-                <a href="#" id="ser-4" onclick=clickstar("ser",4)  title="惊喜" >
+                <a href="#" id="ser-4" onclick=clickstar("ser",4) data-toggle="tooltip" data-placement="top" title="惊喜" style="width:50%">
                     <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
                 </a>
-                <a href="#" id="ser-5" onclick=clickstar("ser",5)  title="好极了" >
+                <a href="#" id="ser-5" onclick=clickstar("ser",5) data-toggle="tooltip" data-placement="top" title="好极了" style="width:50%">
                     <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
                 </a>
-                <font color="#41A317" style="position:relative;top:3px"id="ser-6">&nbsp&nbsp&nbsp意料之中 </font>
         </div>
         <div class="form-group">
              <textarea rows="4" cols="20" class="form-control" id="eva_content" name="eva_content" placeholder="您的评价很重要!来点评一下吧..." required></textarea>
         </div>
+        <button type="button" onclick=posteva()  style="width:100%" id="submitBtn"  class="btn btn-default">提交评价</button>
     </form>
 </div>
-</div>
-<button type="button" onclick=posteva()  style="background:#41A317;border-radius:0px;color:white;width:100%;position:fixed;bottom:0px" id="submitBtn"  class="btn btn-default btn-lg">提交评价</button>
-<div id="popup" style="color:white;position:absolute;top:30%;display:none;left:20%;padding:5% 5%; background:#666666;filter: Alpha(opacity=60);opacity:0.6;">
-     非常感谢您的宝贵意见 ~ ^_^ ~
-</div>
+
+
+<div id="postok" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div id="modalcontent" class="modal-content">
+            非常感谢您的宝贵意见 ^_^
+        </div>
+          </div>
+      </div>
 </body>

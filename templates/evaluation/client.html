@@ -59,25 +59,25 @@ function getqrcode(id){
 </script>
 <body>
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" style="padding:0% 5%">
 <li role="presentation" class="active"><a href="#">客户</a></li>
 <li role="presentation"><a href="/evaluation/freelancer">自由职业者</a></li>
 </ul>
 
-<div style="position:relative;top:10px">
+<div style="position:relative;padding:2% 5% 0% 5%">
     <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target= "#addFreelancerEvaluation">   <!-- data-toggle 用于切换模态框   --> 
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增评价
 </button>
 </div>
-<div class="modal fade" id="showqrcode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
-    <div class="modal-dialog" role="document">
+<div class="modal fade"  id="showqrcode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">二维码</h4>
             </div>
             <div class="modal-body">
-                <div id="qrcodeimg" style="padding:0% 30%" class="modal-body">
+                <div id="qrcodeimg" style="padding:0% 0% 0% 11%" class="modal-body">
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@ function getqrcode(id){
         <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">评价</h4>
+                    <h4 class="modal-title" id="myModalLabel">评价信息</h4>
                 </div>
                 <div class="modal-body">
                     <form method="post" action="/evaluation/client/add" onsubmit="return checkvalid();">
@@ -102,15 +102,15 @@ function getqrcode(id){
                             <input type="text" class="form-control" id="projectname" name="projectname" placeholder="项目名称">
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">提交</button>
                         </div>
                     </form>
                 </div>
         </div>
     </div>
 </div>
-<div style="position:relative;top:10px" id="eva_info" class="bs-example" data-example-id="striped-table">
+<div style="position:relative;padding:1% 5% 0% 5%" id="eva_info" class="bs-example" data-example-id="striped-table">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -138,7 +138,7 @@ function getqrcode(id){
                         <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> 二维码
                     </button>
                     <button type="button" class="btn btn-default btn-xs" onclick=del_eva({{sub_eva.id}},{{page}},"{{sub_eva.name}}")>
-                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> delete
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除 
                     </button>
                 </tr>
                 {% endfor %}
@@ -146,13 +146,13 @@ function getqrcode(id){
         </tbody>
     </table>
         {% if page > 1 %}
-        <button type="button"   style="position:absolute;left:20px" class="btn btn-default btn-sm" onclick=getpage("/evaluation/client?page={{page|add:-1}}")>
+        <button type="button"   style="position:absolute;left:5%" class="btn btn-default btn-sm" onclick=getpage("/evaluation/client?page={{page|add:-1}}")>
             <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> 上一页
         </button>
         {% endif %}
         
         {% if page < max_page %}
-        <button type="button" style="position:absolute;right:20px;"  class="btn btn-default btn-sm" onclick=getpage("/evaluation/client?page={{page|add:1}}")>
+        <button type="button" style="position:absolute;right:5%"  class="btn btn-default btn-sm" onclick=getpage("/evaluation/client?page={{page|add:1}}")>
             <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> 下一页
         </button>
         {% endif %}

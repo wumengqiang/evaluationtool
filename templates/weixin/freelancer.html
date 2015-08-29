@@ -12,47 +12,60 @@
 
 <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0">
 <title>
+    {{projectname}}
 </title>
+<style>
+head{
+font-family: 微软雅黑,宋体;
+}
+body{
+font-family: 微软雅黑,宋体;
+}
+</style>
 </head>
 <script language="javascript"> 
 function clickstar(type,index){
-
     $("[data-toggle='tooltip']").tooltip('destroy'); 
     var id_pre = "#"+type+'-';
     for(var i=1;i<=index;i++){
        var id = id_pre+i;
-       $(id).html("<img src=\"{% static "images/img-full-star.png" %}\" width=7%  border=\"none\">");
+       $(id).html("<img src=\"{% static "images/img-full-star.png" %}\" width=9%  border=\"none\">");
     }
     for(var i=index+1;i<=5;i++){
        var id = id_pre+i;
-       $(id).html("<img src=\"{% static "images/img-full-star-grey.png" %}\" width=7%  border=\"none\">");
+       $(id).html("<img src=\"{% static "images/img-full-star-grey.png" %}\" width=9%  border=\"none\">");
     }
-    tipid = id_pre+index;
-    $(tipid).tooltip('show');
+    tipid = id_pre+6;
+    tipindex = id_pre+index;
+    $(tipid).html("&nbsp&nbsp&nbsp"+$(tipindex).attr('title'));
     id = "#"+type;
     $(id).val(index.toString());
 }
+function hidepopupdialog(){
+    $("#popup").hide();
+}
 function posteva(){
-    $("[data-toggle='tooltip']").tooltip('destroy'); 
+    setTimeout("hidepopupdialog()",1000);
     if($("#eva_content").val() ==""){
-        $("#modalcontent").html(" <span style=\"padding:0% 20%\">亲，必须要填写评论哦 ^_^</span>");
-        $("#postok").modal("show"); 
+        $("#popup").html(" 亲，必须要填写评论哦 ~ ^_^ ~");
+        $("#popup").show();
         return ;
     }
     $.post('/weixin/freelancer/add', {csrfmiddlewaretoken:$("[name=csrfmiddlewaretoken]").val(), name: $("#name").val(), projectname: $("#projectname").val(), eva_requirement: $('#req').val(),eva_management: $('#man').val(),eva_communication: $("#com").val(), eva_content: $("#eva_content").val()}, function (data) { 
             if(data == "ok"){
-               $("#modalcontent").html(" <span style=\"padding:0% 20%\"> 非常感谢您的宝贵意见 ^_^</span>");
-               $("#postok").modal("show"); 
+               $("#popup").html("  非常感谢您的宝贵意见 ~ ^_^ ~");
+               $("#popup").show();
+               $("#submitBtn").css("background",'#B6B6B4');
                $("#submitBtn").html("已评价");
                $("#submitBtn").attr("disabled",true);
                $("#eva_content").attr("disabled",true);
                $("[href='#']").removeAttr("onclick");
             }
             else if(data=="fail"){
-               $("#modalcontent").html(" <span style=\"padding:0% 20%\">-_- 出错了,请重新提交 </span>");
-               $("#postok").modal("show"); 
+               $("#popup").html(" -_- 出错了,请重新提交");
+               $("#popup").show();
             } 
             });
 }    
@@ -63,22 +76,26 @@ $(document).ready(function() {
     clickstar("com",{{eva_communication}});
     $("#eva_content").html("{{eva_content}}");
     $("#submitBtn").html("已评价");
+    $("#submitBtn").css("background",'#B6B6B4');
     $("#eva_content").attr("disabled",true);
     $("#submitBtn").attr("disabled",true);
     $("[href='#']").removeAttr("onclick");
-    $("[data-toggle='tooltip']").tooltip('destroy'); 
 });
+{% else %}
 
+$(document).ready(function() {
+    var height = $(window).height() - $("#submitBtn").height();
+    $("#exbutton").height(height);
+});
 {%endif%}
 </script>
 <body>
-<div style="margin:5% 10%" class="panel panel-default">
-    <div class="panel-body">
-        厘米脚印邀请您对我们在「{{projectname}}」项目中的表现进行评价
-    </div>
+<div id="exbutton"  onclick=hidepopupdialog()>
+<div style="margin:5% 5%;border:none">
+    厘米脚印邀请您对我们在「{{projectname}}」项目中的表现进行评价
 </div>
 <div>
-    <form method="post" action="/weixin/freelancer/add"  style="margin:0% 10%">
+    <form method="post" action="/weixin/freelancer/add"  style="margin:0% 5%">
         {% csrf_token %}
         <div class="form-group">
             <input type="hidden" class="form-control" id="name" name="name" value="{{name}}">
@@ -96,72 +113,71 @@ $(document).ready(function() {
             <input type="hidden" class="form-control" id="com" name="eva_communication" value="3">
         </div>
         <div class="form-group">
-                <span style="top:2px">需求&nbsp&nbsp</span>
-                <a href="#" id="req-1"  data-toggle="tooltip" data-placement="top" onclick=clickstar("req",1) title="完全不懂" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <span style="position:relative;top:3px">需求&nbsp&nbsp</span>
+                <a href="#" id="req-1"   onclick=clickstar("req",1) title="完全不懂" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="req-2" data-toggle="tooltip" data-placement="top" onclick=clickstar("req",2) title="懒惰" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <a href="#" id="req-2"  onclick=clickstar("req",2) title="懒惰" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="req-3" data-toggle="tooltip" data-placement="top" onclick=clickstar("req",3) title="内容基础" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <a href="#" id="req-3"  onclick=clickstar("req",3) title="内容基础" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="req-4" data-toggle="tooltip" data-placement="top" onclick=clickstar("req",4) title="内容容易理解" style="width:50%">
-                    <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
+                <a href="#" id="req-4"  onclick=clickstar("req",4) title="内容容易理解" >
+                    <img src="{% static "images/img-full-star-grey.png" %}" width=9%   border="none">
                 </a>
-                <a href="#" id="req-5" data-toggle="tooltip" data-placement="top" onclick=clickstar("req",5) title="专家啊" style="width:50%">
-                    <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
+                <a href="#" id="req-5"  onclick=clickstar("req",5) title="专家啊" >
+                    <img src="{% static "images/img-full-star-grey.png" %}" width=9%   border="none">
                 </a>
+                <font color="#41A317" style="position:relative;top:3px" id="req-6">&nbsp&nbsp&nbsp内容基础 </font>
         </div>
         <div class="form-group">
-                <span style="top:2px">管理&nbsp&nbsp</span>
-                <a href="#" id="man-1" data-toggle="tooltip" data-placement="top" onclick=clickstar("man",1) title="还不如我自己来" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <span style="position:relative;top:3px">管理&nbsp&nbsp</span>
+                <a href="#" id="man-1"  onclick=clickstar("man",1) title="还不如我来" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="man-2" data-toggle="tooltip" data-placement="top" onclick=clickstar("man",2) title="有时候给我添乱" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <a href="#" id="man-2"  onclick=clickstar("man",2) title="有时给我添乱" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="man-3" data-toggle="tooltip" data-placement="top" onclick=clickstar("man",3) title="正常的节奏" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <a href="#" id="man-3"  onclick=clickstar("man",3) title="正常的节奏" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="man-4" data-toggle="tooltip" data-placement="top" onclick=clickstar("man",4) title="需求稳妥" style="width:50%">
-                    <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
+                <a href="#" id="man-4"  onclick=clickstar("man",4) title="需求稳妥" >
+                    <img src="{% static "images/img-full-star-grey.png" %}" width=9%   border="none">
                 </a>
-                <a href="#" id="man-5" data-toggle="tooltip" data-placement="top" onclick=clickstar("man",5) title="工作超级顺畅" style="width:50%">
-                    <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
+                <a href="#" id="man-5"  onclick=clickstar("man",5) title="工作超级顺畅" >
+                    <img src="{% static "images/img-full-star-grey.png" %}" width=9%   border="none">
                 </a>
+                <font color="#41A317" style="position:relative;top:3px" id="man-6">&nbsp&nbsp&nbsp正常的节奏 </font>
         </div>
         <div class="form-group">
-                <span style="top:2px">沟通&nbsp&nbsp</span>
-                <a href="#" id="com-1" data-toggle="tooltip" data-placement="top" onclick=clickstar("com",1) title="没法沟通" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <span style="position:relative;top:3px">沟通&nbsp&nbsp</span>
+                <a href="#" id="com-1"  onclick=clickstar("com",1) title="没法沟通" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="com-2" data-toggle="tooltip" data-placement="top" onclick=clickstar("com",2) title="不会说话" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <a href="#" id="com-2"  onclick=clickstar("com",2) title="不会说话" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="com-3" data-toggle="tooltip" data-placement="top" onclick=clickstar("com",3) title="没啥感觉" style="width:50%">
-                    <img src="{% static "images/img-full-star.png" %}" width=7%  border="none">
+                <a href="#" id="com-3"  onclick=clickstar("com",3) title="没啥感觉" >
+                    <img src="{% static "images/img-full-star.png" %}" width=9%  border="none">
                 </a>
-                <a href="#" id="com-4" data-toggle="tooltip" data-placement="top" onclick=clickstar("com",4) title="很亲切" style="width:50%">
-                    <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
+                <a href="#" id="com-4"  onclick=clickstar("com",4) title="很亲切" >
+                    <img src="{% static "images/img-full-star-grey.png" %}" width=9%   border="none">
                 </a>
-                <a href="#" id="com-5" data-toggle="tooltip" data-placement="top" onclick=clickstar("com",5) title="被TA感化了" style="width:50%">
-                    <img src="{% static "images/img-full-star-grey.png" %}" width=7%   border="none">
+                <a href="#" id="com-5"  onclick=clickstar("com",5) title="被TA感化了" >
+                    <img src="{% static "images/img-full-star-grey.png" %}" width=9%   border="none">
                 </a>
+                <font color="#41A317" style="position:relative;top:3px" id="com-6">&nbsp&nbsp&nbsp没啥感觉 </font>
         </div>
         <div class="form-group">
              <textarea rows="4" cols="20" class="form-control" id="eva_content" name="eva_content" placeholder="您的评价很重要!来点评一下吧" required></textarea>
         </div>
-        <button type="button" onclick=posteva()  style="width:100%" id="submitBtn"  class="btn btn-default">提交评价</button>
     </form>
 </div>
+</div>
+<button type="button" onclick=posteva()  style="background:#41A317;border-radius:0px;color:white;width:100%;position:fixed;bottom:0px" id="submitBtn"  class="btn btn-default btn-lg">提交评价</button>
 
-
-<div id="postok" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-    <div class="modal-dialog modal-sm">
-        <div id="modalcontent" class="modal-content">
-            非常感谢您的宝贵意见 ^_^
-        </div>
-          </div>
-      </div>
+<div id="popup" style="color:white;position:absolute;top:30%;display:none;left:20%;padding:5% 5%; background:#666666;filter: Alpha(opacity=60);opacity:0.6;">
+         非常感谢您的宝贵意见 ~ ^_^ ~ 
+</div>
 </body>

@@ -47,8 +47,7 @@ def add_freelancer_evaluation(request):
         return render(request,"evaluation/add_fail.html",{"url":"/evaluation/freelancer"})
     eva = Freelancer_eva(name=name, projectname=projectname, eva_requirement=0, eva_management=0, eva_communication=0, eva_content="")
     eva.save()
-    return render(request,"evaluation/add_ok.html",{"url":"/evaluation/freelancer"})
-
+    return HttpResponseRedirect("/evaluation/freelancer")
 @basicauth
 def delete_freelancer_evaluation(request):
     id = int(request.GET['id'])
@@ -96,7 +95,7 @@ def add_client_evaluation(request):
         return render(request,"evaluation/add_fail.html",{"url":"/evaluation/client"})
     eva = Client_eva(name=name, projectname=projectname, eva_progress=0, eva_quality=0, eva_service=0, eva_content="")
     eva.save()
-    return render(request,"evaluation/add_ok.html",{"url":"/evaluation/client"})
+    return HttpResponseRedirect("/evaluation/client")
 
 
 @basicauth

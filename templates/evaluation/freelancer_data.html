@@ -25,20 +25,20 @@
                        <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> 二维码
                    </button>
                    <button type="button" class="btn btn-default btn-xs" onclick=del_eva({{sub_eva.id}},{{page}},"{{sub_eva.name}}")>
-                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> delete
+                       <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除 
                    </button>
           </tr>
         {% endfor %}
         </tbody>
     </table>
             {% if page > 1 %}
-            <button type="button" style="position:absolute;left:20px" class="btn btn-default btn-sm" onclick=getpage("/evaluation/freelancer?page={{page|add:-1}}")>
+            <button type="button" style="position:absolute;left:5%" class="btn btn-default btn-sm" onclick=getpage("/evaluation/freelancer?page={{page|add:-1}}")>
                 <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> 上一页
             </button>
             {% endif %}
 
             {% if page < max_page %}
-            <button type="button" style="position:absolute;right:20px"class="btn btn-default btn-sm" onclick=getpage("/evaluation/freelancer?page={{page|add:1}}")>
+            <button type="button" style="position:absolute;right:5%"class="btn btn-default btn-sm" onclick=getpage("/evaluation/freelancer?page={{page|add:1}}")>
                 <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span> 下一页
             </button>
             {% endif %}
